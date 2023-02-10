@@ -1,5 +1,6 @@
 # Dataset
-DATASET = "dataset/chessData.csv" 
+DATASET_DIR = "dataset/"
+DATASET = "chessData.csv" 
 N_ROWS = 200_000
 TRAINING_SET_SIZE = 0.8
 CENTIPAWN_MAX = 5_000

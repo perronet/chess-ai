@@ -60,6 +60,8 @@ def convert_stockfish_eval(fen_str, score_str):
     if not score_str:
         return 0
 
+    score_str = score_str.replace('\ufeff', '')
+
     # Guaranteed checkmate
     if score_str[0] == "#":
         score = setup.CENTIPAWN_MAX if int(score_str[1:]) >= 0 else setup.CENTIPAWN_MIN
