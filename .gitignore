@@ -133,3 +133,6 @@ dmypy.json
 
 # Models
 engine/models/
+
+# MacOS files
+.DS_Store
