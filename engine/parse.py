@@ -56,7 +56,24 @@ def fen_to_vector(fen_str):
     return training_example
 
 # Convert evaluation based on moving side (positive = winning for moving side)
-def convert_stockfish_eval(fen_str, score_str):
+def normalize_stockfish_eval(fen_str, score_str):
+    score = stockfish_eval_to_int(score_str)
+
+    black_to_move = True if fen_str.split()[1] == 'b' else False
+    if black_to_move:
+        score = -score
+
+    max = setup.CENTIPAWN_CLAMP
+    min = -setup.CENTIPAWN_CLAMP
+
+    if score >= max:
+        return 1
+    if score <= min:
+        return 0
+
+    return (score - min)/(max - min)
+
+def stockfish_eval_to_int(score_str):
     if not score_str:
         return 0
 
@@ -64,17 +81,8 @@ def convert_stockfish_eval(fen_str, score_str):
 
     # Guaranteed checkmate
     if score_str[0] == "#":
-        score = setup.CENTIPAWN_MAX if int(score_str[1:]) >= 0 else setup.CENTIPAWN_MIN
+        score = setup.FORCED_MATE_CENTIPAWN if int(score_str[1:]) >= 0 else -setup.FORCED_MATE_CENTIPAWN
     else:
         score = int(score_str)
 
-    black_to_move = True if fen_str.split()[1] == 'b' else False
-    if black_to_move:
-        score = -score
-
-    if score >= setup.CENTIPAWN_MAX:
-        return 1
-    if score <= setup.CENTIPAWN_MIN:
-        return 0
-
-    return (score - setup.CENTIPAWN_MIN)/(setup.CENTIPAWN_MAX - setup.CENTIPAWN_MIN)
+    return score
