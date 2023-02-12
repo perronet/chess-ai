@@ -92,5 +92,5 @@ res = [game(white_player, black_player) for _ in range(NUM_GAMES)]
 print(res)
 
 plt.hist(res)
-plt.suptitle(f"Balance over {NUM_GAMES} games. (POS:white wins NEG:black wins)")
+plt.suptitle(f"Balance ({NUM_GAMES} games). WHITE: {white_player.__name__} BLACK: {black_player.__name__} \n (black wins <---   ---> white wins)")
 plt.show()
