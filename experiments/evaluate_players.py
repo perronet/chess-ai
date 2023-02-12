@@ -32,17 +32,15 @@ def random_player(board):
 nn_model = keras.models.load_model(MODEL_PATH)
 def nn_player(board):
     best_move = None
-    best_score = -9999999
+    best_score = 9999999
     
     for move in board.legal_moves:
         board.push(move)
 
         input = np.array([parse.fen_to_vector(board.fen())])
-        print(input.shape)
-        score = nn_model.predict(input)
-        print(score)
+        score = nn_model.predict(input, verbose=0)
 
-        if score > best_score:
+        if score < best_score:
             best_score = score
             best_move = move
 
@@ -85,12 +83,15 @@ def game(white_player, black_player):
     return material_balance(board)
     
 
-white_player = random_player
+white_player = nn_player
 black_player = random_player
 NUM_GAMES = 100
-res = [game(white_player, black_player) for _ in range(NUM_GAMES)]
-print(res)
+res = []
+for i in range(NUM_GAMES):
+    print(f"Playing game {i+1} out of {NUM_GAMES}.")
+    res.append(game(white_player, black_player))
 
+print(res)
 plt.hist(res)
 plt.suptitle(f"Balance ({NUM_GAMES} games). WHITE: {white_player.__name__} BLACK: {black_player.__name__} \n (black wins <---   ---> white wins)")
 plt.show()

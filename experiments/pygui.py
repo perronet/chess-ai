@@ -34,17 +34,16 @@ def random_player(board):
 nn_model = keras.models.load_model(MODEL_PATH)
 def nn_player(board):
     best_move = None
-    best_score = -9999999
+    best_score = 9999999
     
     for move in board.legal_moves:
         board.push(move)
 
         input = np.array([parse.fen_to_vector(board.fen())])
-        print(input.shape)
-        score = nn_model.predict(input)
+        score = nn_model.predict(input, verbose=0)
         print(score)
 
-        if score > best_score:
+        if score < best_score:
             best_score = score
             best_move = move
 
