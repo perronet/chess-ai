@@ -1,10 +1,10 @@
-all: play
+all: convert train play
 
 convert:
 	cd engine && python3 convert_dataset.py
 
-train: convert
+train:
 	cd engine && python3 train.py
 
-play: train
+play:
 	cd experiments && python3 pygui.py
