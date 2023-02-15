@@ -1,8 +1,24 @@
 # Dataset
 DATASET_DIR = "dataset/"
-DATASET = "chessData.csv" 
-DATASET_VECTORIZED = "chessData_vec.csv" 
-N_ROWS = 200_000
+N_ROWS = 250_000
+
+### Regular positions from games on lichess
+DATASET_REGULAR = "chessData.csv" 
+DATASET_REGULAR_SIZE = 0.33
+
+### Positions reached by making a random move in a regular position
+DATASET_RANDOM = "random_evals.csv" 
+DATASET_RANDOM_SIZE = 0.33
+
+### Heavily tactical positions where a combination of moves is required to win
+DATASET_TACTIC = "tactic_evals.csv" 
+DATASET_TACTIC_SIZE = 0.33
+
+N_ROWS_EFFECTIVE = min(N_ROWS*DATASET_REGULAR_SIZE, 12_954_834) + \
+                    min(N_ROWS*DATASET_RANDOM_SIZE, 1_000_273) + \
+                    min(N_ROWS*DATASET_TACTIC_SIZE, 2_628_219)
+
+DATASET_VECTORIZED = "dataset_vectorized.csv" 
 TRAINING_SET_SIZE = 0.8
 FORCED_MATE_CENTIPAWN = 10_000
 CENTIPAWN_CLAMP = 1_000

@@ -72,11 +72,11 @@ def create_model_and_train(df_vectorized):
 #################################
 
 if __name__ == "__main__":
-    df_vectorized = pd.read_csv(setup.DATASET_DIR+setup.DATASET_VECTORIZED, nrows=setup.N_ROWS)
+    df_vectorized = pd.read_csv(setup.DATASET_DIR+setup.DATASET_VECTORIZED)
     # Check for null values
     assert df_vectorized[df_vectorized.isnull().values].empty
     # Check shape (+1 is for the label)
-    assert df_vectorized.shape == (setup.N_ROWS, setup.N_FEATURES + 1)
+    assert df_vectorized.shape == (setup.N_ROWS_EFFECTIVE, setup.N_FEATURES + 1)
 
     model, _ = create_model_and_train(df_vectorized)
     model.save(setup.MODEL_NAME)
