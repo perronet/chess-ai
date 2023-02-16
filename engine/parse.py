@@ -59,9 +59,9 @@ def fen_to_vector(fen_str):
 def normalize_stockfish_eval(fen_str, score_str):
     score = stockfish_eval_to_int(score_str)
 
-    black_to_move = True if fen_str.split()[1] == 'b' else False
-    if black_to_move:
-        score = -score
+    #black_to_move = True if fen_str.split()[1] == 'b' else False
+    #if black_to_move:
+    #    score = -score
 
     max = setup.CENTIPAWN_CLAMP
     min = -setup.CENTIPAWN_CLAMP

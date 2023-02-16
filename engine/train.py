@@ -6,7 +6,7 @@ import setup
 import parse
 import utils
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Input, Dense
+from tensorflow.keras.layers import Input, Dense, BatchNormalization
 from tensorflow.keras.activations import relu
 from tensorflow.keras.losses import MeanSquaredError
 from tensorflow.keras.optimizers import Adam, SGD
@@ -27,21 +27,24 @@ def create_model():
             # normalizer,
             Input(shape=(setup.N_FEATURES,)),
             Dense(1024, activation=setup.HIDDEN_ACTIVATION, kernel_regularizer=tf.keras.regularizers.l2(setup.REGULARIZATION_RATE)),
+            BatchNormalization(),
             Dense(1024, activation=setup.HIDDEN_ACTIVATION, kernel_regularizer=tf.keras.regularizers.l2(setup.REGULARIZATION_RATE)),
+            BatchNormalization(),
             Dense(1024, activation=setup.HIDDEN_ACTIVATION, kernel_regularizer=tf.keras.regularizers.l2(setup.REGULARIZATION_RATE)),
+            BatchNormalization(),
             Dense(1, activation=setup.OUTPUT_ACTIVATION),
         ]
     )
     model.compile(
         loss=MeanSquaredError(),
         optimizer=Adam(learning_rate=setup.LEARNING_RATE),
-        # optimizer=SGD(learning_rate=setup.LEARNING_RATE, nesterov=True, momentum=0.7),
+        #optimizer=SGD(learning_rate=setup.LEARNING_RATE)#, nesterov=True, momentum=0.7),
     )
 
     return model
 
 def train_evaluate_model(model, X_train, y_train, X_cv, y_cv):
-    active_callbacks = [TerminateOnNaN()]
+    active_callbacks = []#TerminateOnNaN()]
     if setup.EARLY_STOPPING:
         # Early stopping on training set loss
         active_callbacks.append(EarlyStopping(monitor="loss", patience=setup.PATIENCE))
