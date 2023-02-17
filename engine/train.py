@@ -37,8 +37,8 @@ def create_model():
     )
     model.compile(
         loss=MeanSquaredError(),
-        optimizer=Adam(learning_rate=setup.LEARNING_RATE),
-        #optimizer=SGD(learning_rate=setup.LEARNING_RATE)#, nesterov=True, momentum=0.7),
+        #optimizer=Adam(learning_rate=setup.LEARNING_RATE),
+        optimizer=SGD(learning_rate=setup.LEARNING_RATE, nesterov=True, momentum=0.7),
     )
 
     return model
@@ -59,12 +59,21 @@ def train_evaluate_model(model, X_train, y_train, X_cv, y_cv):
 
     train_error = model.evaluate(X_train, y_train)
     cv_error = model.evaluate(X_cv, y_cv)
-    return history, train_error, cv_error
+
+    y_predicted = (model.predict(X_cv)).squeeze()
+    y_predicted = (y_predicted*20_000)-10_000
+    y_cv = (y_cv*20_000)-10_000
+    errors = np.absolute(y_predicted - y_cv)
+    cv_error_normalized = np.mean(errors)
+
+    return history, train_error, cv_error, cv_error_normalized
 
 def create_model_and_train(df_vectorized):
     # Split in training set and cross-validation set (shuffles randomly and splits)
     features = [f"f_{str(x)}" for x in range(1, setup.N_FEATURES+1)]
     X_train, X_cv, y_train, y_cv = train_test_split(df_vectorized[features], df_vectorized["label"], train_size=setup.TRAINING_SET_SIZE)
+    
+    print(f"Using {len(X_train)} samples for training")
 
     model = create_model()
     print(model.summary())
